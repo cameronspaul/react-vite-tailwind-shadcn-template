@@ -27,7 +27,7 @@ A modern, fast, and minimal template to jumpstart your next project with React 1
 ```bash
 # 1. Clone the repository
 git clone <your-repo-url>
-cd react-vite-tailwind-template
+cd react-vite-tailwind-shadcn-template
 
 # 2. Install dependencies
 npm install
