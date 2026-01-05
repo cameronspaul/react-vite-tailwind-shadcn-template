@@ -13,6 +13,7 @@ A modern, fast, and minimal template to jumpstart your next project with React 1
 - 💎 **Lucide React** - Beautifully simple pixel-perfect icons
 - 🎨 **Simple Icons** - 3000+ SVG icons for popular brands
 - 🏗️ **Shadcn UI Ready** - Configured for easy UI component integration
+- 🎭 **Framer Motion** - Production-ready motion library for React
 
 ## 🚀 Quick Start
 
@@ -48,6 +49,7 @@ The app will be available at `http://localhost:5173`
 | **Routing** | React Router 7 |
 | **State Management** | Zustand |
 | **Icons** | Lucide React & Simple Icons |
+| **Animations** | Framer Motion |
 
 ## 📁 Project Structure
 
