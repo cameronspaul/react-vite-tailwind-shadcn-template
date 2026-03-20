@@ -10,6 +10,7 @@ This document defines the coding standards and constraints for this React + Vite
 - [Project Structure](#project-structure)
 - [Imports](#imports)
 - [Icons](#icons)
+- [Animations](#animations)
 
 ---
 
@@ -362,6 +363,141 @@ Use Tailwind size utilities for consistent icon sizing:
 
 ---
 
+## Animations
+
+### 1. Framer Motion (Primary)
+
+The project includes [Framer Motion](https://www.framer.com/motion/) for animations. **Always consider adding animations** where appropriate to enhance UX.
+
+**Common use cases:**
+- Page/screen transitions
+- Modal/dialog open/close animations
+- List item entrance animations
+- Hover/tap interactions
+- Layout animations
+- Scroll-triggered animations
+
+```tsx
+// ✅ Good - simple fade in animation
+import { motion } from "framer-motion"
+
+function Card({ children }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+      className="rounded-lg border bg-card p-6"
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+// ✅ Good - staggered list animation
+import { motion } from "framer-motion"
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, x: -20 },
+  show: { opacity: 1, x: 0 },
+}
+
+function ItemList({ items }) {
+  return (
+    <motion.ul
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+    >
+      {items.map((item) => (
+        <motion.li key={item.id} variants={itemVariants}>
+          {item.name}
+        </motion.li>
+      ))}
+    </motion.ul>
+  )
+}
+```
+
+### 2. Animation Guidelines
+
+**Do:**
+- Use subtle, purposeful animations that guide attention
+- Keep animations performant (use `transform` and `opacity` when possible)
+- Use consistent timing (0.2s - 0.4s for micro-interactions)
+
+**Don't:**
+- Over-animate to the point of distraction
+- Block user interactions with long animations
+- Use heavy animations on low-end devices without testing
+
+```tsx
+// ✅ Good - reduced motion support
+import { motion, useReducedMotion } from "framer-motion"
+
+function AnimatedButton() {
+  const shouldReduceMotion = useReducedMotion()
+
+  return (
+    <motion.button
+      whileHover={shouldReduceMotion ? {} : { scale: 1.05 }}
+      whileTap={shouldReduceMotion ? {} : { scale: 0.95 }}
+      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+    >
+      Click me
+    </motion.button>
+  )
+}
+```
+
+### 3. AnimatePresence for Exit Animations
+
+Use `AnimatePresence` when components need exit animations (removing from DOM):
+
+```tsx
+// ✅ Good - modal with enter/exit animation
+import { motion, AnimatePresence } from "framer-motion"
+
+function Modal({ isOpen, onClose, children }) {
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={onClose}
+          className="fixed inset-0 bg-black/50"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.2 }}
+            onClick={(e) => e.stopPropagation()}
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-card p-6 rounded-lg"
+          >
+            {children}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+}
+```
+
+---
+
 ## Quick Reference
 
 | Task | Command |
@@ -382,6 +518,7 @@ Use Tailwind size utilities for consistent icon sizing:
 - ✅ Use `cn()` for class merging
 - ✅ Use Lucide icons from `lucide-react`
 - ✅ Use Zustand for global state
+- ✅ Use Framer Motion for animations where appropriate
 - ✅ Modify CSS variables in `theme.css` only
 - ❌ Never add custom CSS rules to `theme.css`
 - ❌ Never create separate `.css` files for components
